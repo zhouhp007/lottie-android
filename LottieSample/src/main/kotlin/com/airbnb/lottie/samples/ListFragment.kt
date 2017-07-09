@@ -31,6 +31,7 @@ class ListFragment : Fragment() {
                 { startActivity(FullScreenActivity::class.java) },
             ListItem("Custom fonts and dynamic text")
                 { showFragment(FontFragment.newInstance()) },
+            ListItem("Paths") { showFragment(PathFragment.newInstance())},
             ListItem("Open lottiefiles.com")
                 { startActivity("http://www.lottiefiles.com".urlIntent()) }
     )
