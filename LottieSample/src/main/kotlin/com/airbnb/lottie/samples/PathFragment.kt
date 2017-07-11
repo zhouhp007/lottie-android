@@ -13,6 +13,10 @@ class PathFragment : Fragment() {
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = container!!.inflate(R.layout.fragment_paths, false)
         val d = PathDrawable()
+
+        view.rgbView.setImageDrawable(RgbGradientDrawable())
+        view.gammaView.setImageDrawable(RgbGradientDrawable().apply { useGamma = true })
+
         view.imageView.setImageDrawable(d)
         view.imageView.setOnClickListener { d.count++ }
         return view

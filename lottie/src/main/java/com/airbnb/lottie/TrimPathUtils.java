@@ -4,8 +4,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
-import android.graphics.PointF;
-import android.support.v4.view.animation.PathInterpolatorCompat;
+import android.graphics.Shader;
 
 public class TrimPathUtils {
   private static final PathMeasure pathMeasure = new PathMeasure();
@@ -13,8 +12,12 @@ public class TrimPathUtils {
   private static final Paint paint = new Paint();
   private static final Matrix matrix = new Matrix();
 
-private Matrix getMatrix(Matrix parentMatrix) {
-  PathInterpolatorCompat interpolator =
-      PathInterpolatorCompat.create(x1, y1, x2, y2);
+private void getMatrix(Matrix parentMatrix) {
+  // PathInterpolatorCompat interpolator =
+  //     PathInterpolatorCompat.create(x1, y1, x2, y2);
 }
+}
+
+class LinearGradient extends Shader {
+
 }

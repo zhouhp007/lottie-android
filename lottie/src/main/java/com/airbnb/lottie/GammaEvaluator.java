@@ -7,7 +7,7 @@ package com.airbnb.lottie;
  * Writted by Romain Guy and Francois Blavoet.
  * https://androidstudygroup.slack.com/archives/animation/p1476461064000335
  */
-class GammaEvaluator {
+public class GammaEvaluator {
 
   // Opto-electronic conversion function for the sRGB color space
   // Takes a gamma-encoded sRGB value and converts it to a linear sRGB value
@@ -24,7 +24,7 @@ class GammaEvaluator {
     return srgb <= 0.04045f ? srgb / 12.92f : (float) Math.pow((srgb + 0.055f) / 1.055f, 2.4f);
   }
 
-  static int evaluate(float fraction, int startInt, int endInt) {
+  public static int evaluate(float fraction, int startInt, int endInt) {
     float startA = ((startInt >> 24) & 0xff) / 255.0f;
     float startR = ((startInt >> 16) & 0xff) / 255.0f;
     float startG = ((startInt >> 8) & 0xff) / 255.0f;
