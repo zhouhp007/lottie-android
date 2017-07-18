@@ -59,6 +59,7 @@ class FillContent implements DrawingContent, BaseKeyframeAnimation.AnimationList
   @Override public void addColorFilter(@Nullable String layerName, @Nullable String contentName,
       @Nullable ColorFilter colorFilter) {
     paint.setColorFilter(colorFilter);
+    lottieDrawable.invalidateSelf();
   }
 
   @Override public void draw(Canvas canvas, Matrix parentMatrix, int parentAlpha) {

@@ -31,6 +31,12 @@
             android:layout_weight="1"
             android:background="@drawable/inverted_background">
 
+            <com.airbnb.lottie.samples.HsvView
+                android:id="@+id/hsvView"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"/>
+
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/animationView"
                 android:layout_width="wrap_content"

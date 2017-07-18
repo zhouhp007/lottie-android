@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.airbnb.lottie.L
 import com.airbnb.lottie.LottieComposition
+import com.airbnb.lottie.SimpleColorFilter
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -287,11 +288,13 @@ class AnimationFragment : Fragment() {
             renderTimesGraph.setVisibleYRange(0f, renderTimeGraphRange, YAxis.AxisDependency.LEFT)
             renderTimesGraph.invalidate()
         }
+
+        hsvView.callback = { c -> animationView.addColorFilterToLayer("Pin 1", SimpleColorFilter(c)) }
     }
 
     private fun setWarnings(warningsList: ArrayList<String>) {
         val size = warningsList.size
-        warnings.visibility = if (size == 0) View.GONE else View.VISIBLE
+//        warnings.visibility = if (size == 0) View.GONE else View.VISIBLE
         warnings.text = resources.getQuantityString(R.plurals.warnings, size, size)
         warnings.setOnClickListener {
             WarningsDialogFragment.newInstance(warningsList).show(fragmentManager, null)

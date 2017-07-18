@@ -13,8 +13,7 @@ public class TrimPathUtils {
   private static final Matrix matrix = new Matrix();
 
 private void getMatrix(Matrix parentMatrix) {
-  // PathInterpolatorCompat interpolator =
-  //     PathInterpolatorCompat.create(x1, y1, x2, y2);
+
 }
 }
 
