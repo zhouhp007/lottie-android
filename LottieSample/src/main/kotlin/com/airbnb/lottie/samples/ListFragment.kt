@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import butterknife.internal.Utils.listOf
-
 import kotlinx.android.synthetic.main.fragment_list.*
 import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.view_holder_file.view.*
@@ -23,6 +22,8 @@ class ListFragment : Fragment() {
     private val items = listOf(
             ListItem("Animation Viewer", SHORTCUT_VIEWER)
                 { showFragment(AnimationFragment.newInstance()) },
+            ListItem("AVD Viewer")
+                { showFragment(AvdFragment.newInstance()) },
             ListItem("Animated Typography", SHORTCUT_TYPOGRAPHY)
                 { startActivity(TypographyDemoActivity::class.java) },
             ListItem("Animated App Tutorial", SHORTCUT_TUTORIAL)

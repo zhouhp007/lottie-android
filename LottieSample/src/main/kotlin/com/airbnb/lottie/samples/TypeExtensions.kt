@@ -46,3 +46,12 @@ fun View.setVisibleIf(condition: Boolean) {
 }
 
 fun Float.lerp(other: Float, amount: Float): Float = this + amount * (other - this)
+
+fun View.setMargin(left: Int, top: Int, right: Int, bottom: Int) {
+    val lp = this.layoutParams as ViewGroup.MarginLayoutParams
+    lp.leftMargin = left
+    lp.topMargin = top
+    lp.rightMargin = right
+    lp.bottomMargin = bottom
+    this.layoutParams = layoutParams
+}
