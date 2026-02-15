@@ -19,5 +19,9 @@ public class Lottie {
     L.setFetcher(lottieConfig.networkFetcher);
     L.setCacheProvider(lottieConfig.cacheProvider);
     L.setTraceEnabled(lottieConfig.enableSystraceMarkers);
+    L.setNetworkCacheEnabled(lottieConfig.enableNetworkCache);
+    L.setDisablePathInterpolatorCache(lottieConfig.disablePathInterpolatorCache);
+    L.setDefaultAsyncUpdates(lottieConfig.defaultAsyncUpdates);
+    L.setReducedMotionOption(lottieConfig.reducedMotionOption);
   }
 }

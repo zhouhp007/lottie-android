@@ -90,6 +90,21 @@ public class Keyframe<T> {
     endFrame = Float.MAX_VALUE;
   }
 
+  private Keyframe(T startValue, T endValue) {
+    composition = null;
+    this.startValue = startValue;
+    this.endValue = endValue;
+    interpolator = null;
+    xInterpolator = null;
+    yInterpolator = null;
+    startFrame = Float.MIN_VALUE;
+    endFrame = Float.MAX_VALUE;
+  }
+
+  public Keyframe<T> copyWith(T startValue, T endValue) {
+    return new Keyframe<T>(startValue, endValue);
+  }
+
   public float getStartProgress() {
     if (composition == null) {
       return 0f;
@@ -110,8 +125,8 @@ public class Keyframe<T> {
       } else {
         float startProgress = getStartProgress();
         float durationFrames = endFrame - startFrame;
-        float durationProgress = durationFrames / composition.getDurationFrames();
-        endProgress = startProgress + durationProgress;
+        double durationProgress = durationFrames / (double) composition.getDurationFrames();
+        endProgress = (float) (startProgress + durationProgress);
       }
     }
     return endProgress;

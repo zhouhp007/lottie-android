@@ -51,6 +51,10 @@ public class RoundedCornersContent implements ShapeModifierContent, BaseKeyframe
     return roundedCorners;
   }
 
+  @Override public void addUpdateListener(BaseKeyframeAnimation.AnimationListener listener) {
+    roundedCorners.addUpdateListener(listener);
+  }
+
   /**
    * Rounded corner algorithm:
    * Iterate through each vertex.
@@ -112,7 +116,7 @@ public class RoundedCornersContent implements ShapeModifierContent, BaseKeyframe
       PointF nextVertex = startingCurve.getVertex();
 
       // We can't round the corner of the end of a non-closed curve.
-      boolean isEndOfCurve = !startingShapeData.isClosed() && (i == 0 && i == startingCurves.size() - 1);
+      boolean isEndOfCurve = !startingShapeData.isClosed() && (i == 0 || i == startingCurves.size() - 1);
       if (inPoint.equals(vertex) && outPoint.equals(vertex) && !isEndOfCurve) {
         // This vertex is a point. Round its corners
         float dxToPreviousVertex = vertex.x - previousVertex.x;
@@ -161,9 +165,9 @@ public class RoundedCornersContent implements ShapeModifierContent, BaseKeyframe
         // oriented point to CubicCurveData (path segments).
         CubicCurveData previousCurveData = modifiedCurves.get(floorMod(modifiedCurvesIndex - 1, modifiedCurves.size()));
         CubicCurveData currentCurveData = modifiedCurves.get(modifiedCurvesIndex);
-        previousCurveData.setControlPoint2(previousCurve.getVertex().x, previousCurve.getVertex().y);
+        previousCurveData.setControlPoint2(previousCurve.getControlPoint2().x, previousCurve.getControlPoint2().y);
         previousCurveData.setVertex(previousCurve.getVertex().x, previousCurve.getVertex().y);
-        currentCurveData.setControlPoint1(startingCurve.getVertex().x, startingCurve.getVertex().y);
+        currentCurveData.setControlPoint1(startingCurve.getControlPoint1().x, startingCurve.getControlPoint1().y);
         modifiedCurvesIndex++;
       }
     }
@@ -186,7 +190,7 @@ public class RoundedCornersContent implements ShapeModifierContent, BaseKeyframe
       PointF inPoint = (i == 0 && !isClosed) ? vertex : previousCurve.getControlPoint2();
       PointF outPoint = startingCurve.getControlPoint1();
 
-      boolean isEndOfCurve = !startingShapeData.isClosed() && (i == 0 && i == startingCurves.size() - 1);
+      boolean isEndOfCurve = !startingShapeData.isClosed() && (i == 0 || i == startingCurves.size() - 1);
       if (inPoint.equals(vertex) && outPoint.equals(vertex) && !isEndOfCurve) {
         vertices += 2;
       } else {

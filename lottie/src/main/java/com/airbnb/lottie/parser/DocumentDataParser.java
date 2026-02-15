@@ -1,6 +1,8 @@
 package com.airbnb.lottie.parser;
 
 
+import android.graphics.PointF;
+
 import com.airbnb.lottie.model.DocumentData;
 import com.airbnb.lottie.model.DocumentData.Justification;
 import com.airbnb.lottie.parser.moshi.JsonReader;
@@ -20,7 +22,9 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
       "fc", // 7
       "sc", // 8
       "sw", // 9
-      "of"  // 10
+      "of", // 10
+      "ps", // 11
+      "sz" // 12
   );
 
   private DocumentDataParser() {
@@ -39,6 +43,8 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
     int strokeColor = 0;
     float strokeWidth = 0f;
     boolean strokeOverFill = true;
+    PointF boxPosition = null;
+    PointF boxSize = null;
 
     reader.beginObject();
     while (reader.hasNext()) {
@@ -81,6 +87,16 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
         case 10:
           strokeOverFill = reader.nextBoolean();
           break;
+        case 11:
+          reader.beginArray();
+          boxPosition = new PointF((float) reader.nextDouble() * scale, (float) reader.nextDouble() * scale);
+          reader.endArray();
+          break;
+        case 12:
+          reader.beginArray();
+          boxSize = new PointF((float) reader.nextDouble() * scale, (float) reader.nextDouble() * scale);
+          reader.endArray();
+          break;
         default:
           reader.skipName();
           reader.skipValue();
@@ -89,6 +105,6 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
     reader.endObject();
 
     return new DocumentData(text, fontName, size, justification, tracking, lineHeight,
-        baselineShift, fillColor, strokeColor, strokeWidth, strokeOverFill);
+        baselineShift, fillColor, strokeColor, strokeWidth, strokeOverFill, boxPosition, boxSize);
   }
 }

@@ -1,3 +1,28 @@
+# 6.5.2
+* Add support for new reduced motion settings ([#2543](https://github.com/airbnb/lottie-android/pull/2543))
+
+# 6.4.1
+### New Features
+* Add support for tgs files ([#2501](https://github.com/airbnb/lottie-android/pull/2501))
+
+# 6.4.0
+### New Features
+* Add safe mode ([#2455](https://github.com/airbnb/lottie-android/pull/2455))
+* Clarify clipToCompositionBounds docs ([#2473](https://github.com/airbnb/lottie-android/pull/2473))
+
+# 6.3.0
+* Add LottiePainter and rememberLottiePainter to use Lottie anywhere a Painter can be used ([#2442](https://github.com/airbnb/lottie-android/pull/2442))
+* Constrain unconstrainted bounds when the other dimension is constrained ([#2437](https://github.com/airbnb/lottie-android/pull/2437))
+
+# 6.1.0
+* Key dynamic properties on composition to ensure that they are set if the composition changes ([#2290](https://github.com/airbnb/lottie-android/pull/2290))
+* Add `@JvmOverloads` to `LottieAnimation` to improve binary compatibility ([#2320](https://github.com/airbnb/lottie-android/pull/2320))
+
+# 6.0.0
+* Add reverseOnRepeat ([#2128](https://github.com/airbnb/lottie-android/pull/2128))
+* Allow setting a font map for custom fonts ([#2180](https://github.com/airbnb/lottie-android/pull/2180))
+* Allow images to be rendered ([#2183](https://github.com/airbnb/lottie-android/pull/2072))
+
 # 5.2.0
 * [BREAKING CHANGE]
 LottieAnimation now takes progress as a `() -> Float` rather than a `Float`. This allows Lottie to redraw without triggering a recomposition every time progress updates. For more information, refer to the Compose [phase docs](https://developer.android.com/jetpack/compose/phases). The existing API will exist as deprecated for one more release but will then be removed. For the vast majority of use cases:

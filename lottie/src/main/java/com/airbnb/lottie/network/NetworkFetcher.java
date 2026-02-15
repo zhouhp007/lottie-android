@@ -17,17 +17,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipInputStream;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class NetworkFetcher {
 
-  @NonNull
+  @Nullable
   private final NetworkCache networkCache;
   @NonNull
   private final LottieNetworkFetcher fetcher;
 
-  public NetworkFetcher(@NonNull NetworkCache networkCache, @NonNull LottieNetworkFetcher fetcher) {
+  public NetworkFetcher(@Nullable NetworkCache networkCache, @NonNull LottieNetworkFetcher fetcher) {
     this.networkCache = networkCache;
     this.fetcher = fetcher;
   }
@@ -48,7 +49,7 @@ public class NetworkFetcher {
   @Nullable
   @WorkerThread
   private LottieComposition fetchFromCache(Context context, @NonNull String url, @Nullable String cacheKey) {
-    if (cacheKey == null) {
+    if (cacheKey == null || networkCache == null) {
       return null;
     }
     Pair<FileExtension, InputStream> cacheResult = networkCache.fetch(url);
@@ -59,10 +60,19 @@ public class NetworkFetcher {
     FileExtension extension = cacheResult.first;
     InputStream inputStream = cacheResult.second;
     LottieResult<LottieComposition> result;
-    if (extension == FileExtension.ZIP) {
-      result = LottieCompositionFactory.fromZipStreamSync(context, new ZipInputStream(inputStream), url);
-    } else {
-      result = LottieCompositionFactory.fromJsonInputStreamSync(inputStream, url);
+    switch (extension) {
+      case ZIP:
+        result = LottieCompositionFactory.fromZipStreamSync(context, new ZipInputStream(inputStream), cacheKey);
+        break;
+      case GZIP:
+        try {
+          result = LottieCompositionFactory.fromJsonInputStreamSync(new GZIPInputStream(inputStream), cacheKey);
+        } catch (IOException e) {
+          result = new LottieResult<>(e);
+        }
+        break;
+      default:
+        result = LottieCompositionFactory.fromJsonInputStreamSync(inputStream, cacheKey);
     }
     if (result.getValue() != null) {
       return result.getValue();
@@ -117,13 +127,19 @@ public class NetworkFetcher {
       Logger.debug("Handling zip response.");
       extension = FileExtension.ZIP;
       result = fromZipStream(context, url, inputStream, cacheKey);
+    } else if (contentType.contains("application/gzip") ||
+        contentType.contains("application/x-gzip") ||
+        url.split("\\?")[0].endsWith(".tgs")) {
+      Logger.debug("Handling gzip response.");
+      extension = FileExtension.GZIP;
+      result = fromGzipStream(url, inputStream, cacheKey);
     } else {
       Logger.debug("Received json response.");
       extension = FileExtension.JSON;
       result = fromJsonStream(url, inputStream, cacheKey);
     }
 
-    if (cacheKey != null && result.getValue() != null) {
+    if (cacheKey != null && result.getValue() != null && networkCache != null) {
       networkCache.renameTempFile(url, extension);
     }
 
@@ -133,7 +149,7 @@ public class NetworkFetcher {
   @NonNull
   private LottieResult<LottieComposition> fromZipStream(Context context, @NonNull String url, @NonNull InputStream inputStream, @Nullable String cacheKey)
       throws IOException {
-    if (cacheKey == null) {
+    if (cacheKey == null || networkCache == null) {
       return LottieCompositionFactory.fromZipStreamSync(context, new ZipInputStream(inputStream), null);
     }
     File file = networkCache.writeTempCacheFile(url, inputStream, FileExtension.ZIP);
@@ -141,9 +157,19 @@ public class NetworkFetcher {
   }
 
   @NonNull
+  private LottieResult<LottieComposition> fromGzipStream(@NonNull String url, @NonNull InputStream inputStream, @Nullable String cacheKey)
+      throws IOException {
+    if (cacheKey == null || networkCache == null) {
+      return LottieCompositionFactory.fromJsonInputStreamSync(new GZIPInputStream(inputStream), null);
+    }
+    File file = networkCache.writeTempCacheFile(url, inputStream, FileExtension.GZIP);
+    return LottieCompositionFactory.fromJsonInputStreamSync(new GZIPInputStream(new FileInputStream(file)), url);
+  }
+
+  @NonNull
   private LottieResult<LottieComposition> fromJsonStream(@NonNull String url, @NonNull InputStream inputStream, @Nullable String cacheKey)
       throws IOException {
-    if (cacheKey == null) {
+    if (cacheKey == null || networkCache == null) {
       return LottieCompositionFactory.fromJsonInputStreamSync(inputStream, null);
     }
     File file = networkCache.writeTempCacheFile(url, inputStream, FileExtension.JSON);

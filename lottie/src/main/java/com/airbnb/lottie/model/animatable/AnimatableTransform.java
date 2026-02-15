@@ -4,6 +4,7 @@ import android.graphics.PointF;
 
 import androidx.annotation.Nullable;
 
+import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.LottieDrawable;
 import com.airbnb.lottie.animation.content.Content;
 import com.airbnb.lottie.animation.content.ModifierContent;
@@ -27,14 +28,24 @@ public class AnimatableTransform implements ModifierContent, ContentModel {
   @Nullable
   private final AnimatableFloatValue skewAngle;
 
+  // 3D properties
+  @Nullable
+  private final AnimatableFloatValue rotationX;
+  @Nullable
+  private final AnimatableFloatValue rotationY;
+  @Nullable
+  private final AnimatableFloatValue rotationZ;
+
   // Used for repeaters
   @Nullable
   private final AnimatableFloatValue startOpacity;
   @Nullable
   private final AnimatableFloatValue endOpacity;
 
+  private boolean autoOrient = false;
+
   public AnimatableTransform() {
-    this(null, null, null, null, null, null, null, null, null);
+    this(null, null, null, null, null, null, null, null, null, null, null, null);
   }
 
   public AnimatableTransform(@Nullable AnimatablePathValue anchorPoint,
@@ -42,6 +53,16 @@ public class AnimatableTransform implements ModifierContent, ContentModel {
       @Nullable AnimatableFloatValue rotation, @Nullable AnimatableIntegerValue opacity,
       @Nullable AnimatableFloatValue startOpacity, @Nullable AnimatableFloatValue endOpacity,
       @Nullable AnimatableFloatValue skew, @Nullable AnimatableFloatValue skewAngle) {
+    this(anchorPoint, position, scale, rotation, opacity, startOpacity, endOpacity, skew, skewAngle, null, null, null);
+  }
+
+  public AnimatableTransform(@Nullable AnimatablePathValue anchorPoint,
+      @Nullable AnimatableValue<PointF, PointF> position, @Nullable AnimatableScaleValue scale,
+      @Nullable AnimatableFloatValue rotation, @Nullable AnimatableIntegerValue opacity,
+      @Nullable AnimatableFloatValue startOpacity, @Nullable AnimatableFloatValue endOpacity,
+      @Nullable AnimatableFloatValue skew, @Nullable AnimatableFloatValue skewAngle,
+      @Nullable AnimatableFloatValue rotationX, @Nullable AnimatableFloatValue rotationY,
+      @Nullable AnimatableFloatValue rotationZ) {
     this.anchorPoint = anchorPoint;
     this.position = position;
     this.scale = scale;
@@ -51,6 +72,16 @@ public class AnimatableTransform implements ModifierContent, ContentModel {
     this.endOpacity = endOpacity;
     this.skew = skew;
     this.skewAngle = skewAngle;
+    this.rotationX = rotationX;
+    this.rotationY = rotationY;
+    this.rotationZ = rotationZ;
+  }
+
+  /**
+   * This is set as a property of the layer so it is parsed and set separately.
+   */
+  public void setAutoOrient(boolean autoOrient) {
+    this.autoOrient = autoOrient;
   }
 
   @Nullable
@@ -98,13 +129,36 @@ public class AnimatableTransform implements ModifierContent, ContentModel {
     return skewAngle;
   }
 
+  @Nullable
+  public AnimatableFloatValue getRotationX() {
+    return rotationX;
+  }
+
+  @Nullable
+  public AnimatableFloatValue getRotationY() {
+    return rotationY;
+  }
+
+  @Nullable
+  public AnimatableFloatValue getRotationZ() {
+    return rotationZ;
+  }
+
+  public boolean isAutoOrient() {
+    return autoOrient;
+  }
+
+  public boolean has3DRotation() {
+    return rotationX != null || rotationY != null || rotationZ != null;
+  }
+
   public TransformKeyframeAnimation createAnimation() {
     return new TransformKeyframeAnimation(this);
   }
 
   @Nullable
   @Override
-  public Content toContent(LottieDrawable drawable, BaseLayer layer) {
+  public Content toContent(LottieDrawable drawable, LottieComposition composition, BaseLayer layer) {
     return null;
   }
 }
